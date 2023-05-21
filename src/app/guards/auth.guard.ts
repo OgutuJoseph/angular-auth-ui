@@ -23,7 +23,7 @@ export class AuthGuard {
     if(this.auth.isLoggedIn()){
       return true;
     } else {
-      this.toast.error({ detail: "Unauthorized", summary: "You are not logged in.", duration: 5000 })
+      this.toast.error({ detail: "Access Denied", summary: "You are not logged in.", duration: 5000 })
       this.router.navigate(['login']);
       return false;
     }    

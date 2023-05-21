@@ -14,6 +14,7 @@ export class DashboardComponent {
   public users : any = [];
 
   public fullName : string = "";
+  public userRole! : string;
 
   constructor(
     private api : ApiService,
@@ -30,9 +31,15 @@ export class DashboardComponent {
 
     this.userStore.getFullNameFromStore()
     .subscribe(val=>{
-      let fullNameFromToken = this.auth.getFullNameFromToken();
-      // this.fullName = val || fullNameFromToken;
-      this.fullName = fullNameFromToken;
+      const fullNameFromToken = this.auth.getFullNameFromToken();
+      this.fullName = val || fullNameFromToken;
+      // this.fullName = fullNameFromToken;
+    })
+
+    this.userStore.getRoleFromStore()
+    .subscribe(val=>{
+      const roleFromToken = this.auth.getRoleFromToken();
+      this.userRole = val || roleFromToken;
     })
   }
 
