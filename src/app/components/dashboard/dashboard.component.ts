@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { NgToastService } from 'ng-angular-popup';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserStoreService } from 'src/app/services/user-store.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,9 +13,13 @@ export class DashboardComponent {
 
   public users : any = [];
 
+  public fullName : string = "";
+
   constructor(
     private api : ApiService,
-    private auth : AuthService
+    private auth : AuthService,
+    private toast : NgToastService,
+    private userStore : UserStoreService
   ) {}
 
   ngOnInit() {
@@ -21,9 +27,17 @@ export class DashboardComponent {
     .subscribe(res => {
       this.users = res;
     })
+
+    this.userStore.getFullNameFromStore()
+    .subscribe(val=>{
+      let fullNameFromToken = this.auth.getFullNameFromToken();
+      // this.fullName = val || fullNameFromToken;
+      this.fullName = fullNameFromToken;
+    })
   }
 
   logout() {
     this.auth.signOut();
+    this.toast.warning({detail: 'User Signed Out', summary: 'Logged out successfully.'});
   }
 }
