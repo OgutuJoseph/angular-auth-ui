@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class DashboardComponent {
 
-  public users: any = [];
+  public users : any = [];
 
   constructor(
     private api : ApiService,
@@ -17,8 +17,10 @@ export class DashboardComponent {
   ) {}
 
   ngOnInit() {
-    // this.api.getUsers()
-    // .subscribe(res)
+    this.api.getUsers()
+    .subscribe(res => {
+      this.users = res;
+    })
   }
 
   logout() {

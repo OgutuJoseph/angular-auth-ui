@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -5,5 +6,13 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
 
-  constructor() { }
+  private baseUrl : string = "https://localhost:7138/api/User"
+
+  constructor(
+    private http : HttpClient
+  ) { }
+
+  getUsers() {
+    return this.http.get<any>(this.baseUrl);
+  }
 }
