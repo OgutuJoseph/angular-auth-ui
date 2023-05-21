@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,4 +9,19 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
 
+  public users: any = [];
+
+  constructor(
+    private api : ApiService,
+    private auth : AuthService
+  ) {}
+
+  ngOnInit() {
+    // this.api.getUsers()
+    // .subscribe(res)
+  }
+
+  logout() {
+    this.auth.signOut();
+  }
 }
