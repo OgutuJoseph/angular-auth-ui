@@ -49,7 +49,14 @@ export class LoginComponent {
         next: (res) => {
           // alert(res.message);
           this.loginForm.reset();
-          this.auth.storeToken(res.token);
+
+          /** before introduction of access / refresh token */
+          // this.auth.storeToken(res.token);
+
+          /** after introduction of access / refresh token */
+          this.auth.storeToken(res.accessToken);
+          this.auth.storeRefreshToken(res.refreshToken);
+
           const tokenPayload = this.auth.decodedToken();
           this.userStore.setFullNameForStore(tokenPayload.unique_name);
           this.userStore.setRoleForStore(tokenPayload.role);
