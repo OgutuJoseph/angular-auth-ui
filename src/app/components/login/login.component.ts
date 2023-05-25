@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import ValidateForm from 'src/app/helpers/validateform';
 import { AuthService } from 'src/app/services/auth.service';
+import { ResetPasswordService } from 'src/app/services/reset-password.service';
 import { UserStoreService } from 'src/app/services/user-store.service';
 
 @Component({
@@ -17,13 +18,17 @@ export class LoginComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash";
   loginForm!: FormGroup;
+  
+  public resetPasswordEmail!: string;
+  public isValidEmail!: boolean;
 
   constructor(
     private fb: FormBuilder, 
     private auth : AuthService, 
     private router : Router,
     private toast: NgToastService,
-    private userStore: UserStoreService
+    private userStore: UserStoreService,
+    private resetService: ResetPasswordService
   ) {  }
 
   ngOnInit(): void {
@@ -73,6 +78,53 @@ export class LoginComponent {
       // console.log('Form is not valid')
       ValidateForm.validateAllFormFields(this.loginForm);
       alert('Your form is invalid');
+    }
+  }
+
+  checkValidEmail(event: string) {
+    const value = event;
+    const pattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/;  // abc@mail.co / abc@mail.com / abc.1@mail.co / abc.1@mail.com
+    this.isValidEmail = pattern.test(value);
+    return this.isValidEmail;
+  }
+
+  confirmPasswordReset() {
+    if(this.checkValidEmail(this.resetPasswordEmail)){
+      console.log('email here: ', this.resetPasswordEmail);
+
+      // // to reset input field to blank
+      // this.resetPasswordEmail = "";
+
+      // // to auto close modal by simulating close button click
+      // const buttonRef = document.getElementById("closeBtn");
+      // buttonRef?.click();
+
+      /** API Call */
+      this.resetService.sendResetPasswordLink(this.resetPasswordEmail)
+      .subscribe({
+        next: (res) => {
+          // toast notification
+          this.toast.success({
+            detail: "Success",
+            summary: "Password reset request submitted",
+            duration: 5000
+          })
+
+          // to reset input field to blank
+          this.resetPasswordEmail = "";
+
+          // to auto close modal by simulating close button click
+          const buttonRef = document.getElementById("closeBtn");
+          buttonRef?.click();
+        },
+        error: (err) => {
+          this.toast.error({
+            detail: "Error",
+            summary: "Something went wrong. Make sure the email provided has been registered.",
+            duration: 15000
+          })
+        }
+      })
     }
   }
 }
